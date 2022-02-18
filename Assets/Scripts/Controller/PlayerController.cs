@@ -1,67 +1,38 @@
-﻿namespace BomberPig
+﻿using System;
+
+
+namespace BomberPig
 {
-    public sealed class PlayerController : IExecute, IPlayer
+    public sealed class PlayerController : UnitController, IPlayer
     {
-        #region Fields
+        public event Action OnBlownUp = delegate { };
 
-        private readonly IMapInfo _mapInfo;
-        private readonly INavigator _navigator;
-        private readonly IUnitMotor _motor;
-        private readonly UnitModel _unitModel;
-        private readonly UnitView _unitView;
-        private bool _isMoving;
+        private bool _isBombSet;
 
-        #endregion
-
-
-        #region ClassLifeCycles
-
-        public PlayerController(PlayerData data, IBuildPlayer builder, IMapInfo mapInfo, INavigator navigator, IUnitMotor motor)
+        public PlayerController(PlayerData data, IBuildPlayer builder, IMapInfo mapInfo, INavigator navigator, IUnitMotor motor) :
+            base(data, builder, mapInfo, navigator, motor)
         {
-            _mapInfo = mapInfo;
-            _navigator = navigator;
-            _motor = motor;
-            _unitModel = new UnitModel(data, _mapInfo.GetCellCenter(data.GetStartCell));
-            _unitView = builder.BuildPlayer(data.GetPrefab, _unitModel.Position);
-            _unitView.SetOrderInLayer(data.GetStartCell.Row);
-            _isMoving = false;
+            _isBombSet = false;
         }
 
-        #endregion
-
-
-        #region Methods
-        public void SetInputDirection(UnityEngine.Vector2 direction)
+        public void SetBomb()
         {
-            if (_isMoving)
-                return;
-
-            var t = _navigator.CalculateDestination(_unitModel.GetCoordinates, direction);
-            if (t.direction != MoveDirection.None)
+            if (!_isBombSet)
             {
-                _isMoving = true;
-
-                _unitModel.Destination = t.destination;
-                _unitModel.ChangeDirection(t.direction);
-
-                _unitView.SetSprite(_unitModel.GetSprite);
-                _unitView.SetOrderInLayer(_unitModel.GetCoordinates.Row);
+                _mapInfo.SetBomb(_unitModel.GetCoordinates);
+                Services.Instance.TimerService.Add(3, ResetBombSet);
+                _isBombSet = true;
             }
         }
 
-        #endregion
-
-
-        #region IExecute
-
-        public void Execute()
+        protected override void BlownUp()
         {
-            if (_isMoving)
-            {
-                _isMoving = _motor.Move(_unitModel, _unitView);
-            }
+            OnBlownUp.Invoke();
         }
 
-        #endregion
+        private void ResetBombSet()
+        {
+            _isBombSet = false;
+        }
     }
 }

@@ -23,6 +23,10 @@ namespace BomberPig
             var move = gamepad.leftStick.ReadValue();
             if (System.Math.Abs(move.x) > MIN_OFFSET || System.Math.Abs(move.y) > MIN_OFFSET)
                 _player.SetInputDirection(move);
+
+            var touch = gamepad.rightTrigger.isPressed;
+            if (touch)
+                _player.SetBomb();
         }
     }
 }

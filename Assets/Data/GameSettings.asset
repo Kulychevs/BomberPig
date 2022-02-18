@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapData: {fileID: 11400000, guid: db7cec0af3584a24182454c61fe97135, type: 2}
   _playerData: {fileID: 11400000, guid: 034d5336c58da5c488bb5e9f53bfa5c2, type: 2}
+  _enemiesData: {fileID: 11400000, guid: 630a35f4ed5e80f4b9fa8de426aacafa, type: 2}
+  _bombPrefab: {fileID: 532009248607237638, guid: 1a14d2ce1033503499d8f75ffa98101e, type: 3}

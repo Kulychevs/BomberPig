@@ -3,17 +3,18 @@
 
 namespace BomberPig
 {
-    public sealed class UnitModel
+    public class UnitModel
     {
         #region Fields
 
         public Vector2 Position;
         public Vector2 Destination;
 
-        private readonly Sprite _rightSprite;
-        private readonly Sprite _leftSprite;
-        private readonly Sprite _upSprite;
-        private readonly Sprite _downSprite;
+        protected Sprite _rightSprite;
+        protected Sprite _leftSprite;
+        protected Sprite _upSprite;
+        protected Sprite _downSprite;
+        protected MoveDirection _moveDirection;
         private readonly float _speed;
         private Sprite _currentSprite;
         private CellCoordinatesModel _coordinates;
@@ -40,6 +41,7 @@ namespace BomberPig
             _leftSprite = data.GetLeftSprite;
             _upSprite = data.GetUpSprite;
             _downSprite = data.GetDownSprite;
+            _moveDirection = MoveDirection.Right;
             Position = position;
             Destination = position;
             _coordinates = data.GetStartCell;
@@ -76,6 +78,7 @@ namespace BomberPig
                 default:
                     break;
             }
+            _moveDirection = moveDirection;
         }
 
         #endregion

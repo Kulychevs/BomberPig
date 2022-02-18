@@ -8,5 +8,7 @@ namespace BomberPig
         public Vector2 GetCellCenter(CellCoordinatesModel coordinates);
         public bool IsObstacleCell(CellCoordinatesModel coordinates);
         public bool IsValudCoordinates(CellCoordinatesModel coordinates);
+        public void SetBomb(CellCoordinatesModel coordinates);
+        public bool IsBomb(CellCoordinatesModel coordinates);
     }
 }

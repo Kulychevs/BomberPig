@@ -8,8 +8,12 @@ namespace BomberPig
     {
         [SerializeField] private MapData _mapData;
         [SerializeField] private PlayerData _playerData;
+        [SerializeField] private EnemiesData _enemiesData;
+        [SerializeField] private GameObject _bombPrefab;
 
         public MapData GetMapData => _mapData;
         public PlayerData GetPlayerData => _playerData;
+        public EnemiesData GetEnemiesData => _enemiesData;
+        public GameObject getBombPrefab => _bombPrefab;
     }
 }

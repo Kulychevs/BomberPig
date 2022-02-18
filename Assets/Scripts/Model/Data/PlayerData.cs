@@ -4,7 +4,7 @@
 namespace BomberPig
 {
     [CreateAssetMenu(fileName = nameof(PlayerData), menuName = "Data/" + nameof(PlayerData), order = 3)]
-    public sealed class PlayerData : ScriptableObject
+    public class PlayerData : ScriptableObject
     {
         [SerializeField] private GameObject _prefab;
         [SerializeField] private Sprite _left;
