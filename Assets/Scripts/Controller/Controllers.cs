@@ -27,6 +27,7 @@
             var inputController = new InputController(playerController);
             var enemiesController = new EnemiesController(settings.GetEnemiesData, new PlayerBuilder(),
                                                         mapController, new Navigator(mapController), new UnitMotor());
+            var uiController = new UIController();
 
 
             _executeControllers = new IExecute[]
@@ -36,6 +37,13 @@
                 enemiesController,
                 Services.Instance.TimerService
             };
+
+            enemiesController.OnEnemyCatchPig += uiController.ActivateEndGamePanel;
+            playerController.OnBlownUp += uiController.ActivateEndGamePanel;
+
+            uiController.OnRestart += enemiesController.Restart;
+            uiController.OnRestart += playerController.Restart;
+            uiController.OnRestart += mapController.Restart;
         }
 
         #endregion

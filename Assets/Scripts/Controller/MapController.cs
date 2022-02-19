@@ -3,7 +3,7 @@
 
 namespace BomberPig
 {
-    public sealed class MapController : IMapInfo
+    public sealed class MapController : IMapInfo, IRestart
     {
         #region Fields
 
@@ -11,6 +11,8 @@ namespace BomberPig
         private readonly CellModel[,] _map;
         private readonly int _rowCount;
         private readonly int _columnCount;
+
+        private CellCoordinatesModel _pigCoordinates;
 
         #endregion
 
@@ -75,6 +77,44 @@ namespace BomberPig
             }
 
             return false;
+        }
+
+        public void SetPig(CellCoordinatesModel coordinates)
+        {
+            _pigCoordinates = coordinates;
+            
+        }
+
+        public bool IsPig(CellCoordinatesModel coordinates)
+        {
+            return coordinates == _pigCoordinates;
+        }
+
+        public bool IsEnemy(CellCoordinatesModel coordinates)
+        {
+            return _map[coordinates.Row, coordinates.Column].EnemiesNumber > 0;
+        }
+
+        public void SetEnemy(CellCoordinatesModel coordinates)
+        {
+            _map[coordinates.Row, coordinates.Column].EnemiesNumber += 1;
+        }
+
+        public void RemoveEnemy(CellCoordinatesModel coordinates)
+        {
+            _map[coordinates.Row, coordinates.Column].EnemiesNumber -= 1;
+        }
+
+        public void Restart()
+        {
+            for (int i = 0; i < _rowCount; i++)
+            {
+                for (int j = 0; j < _columnCount; j++)
+                {
+                    if (_map[i, j].Bomb != null)
+                        DetonateBomb(new CellCoordinatesModel { Row = i, Column = j });
+                }
+            }
         }
 
         #endregion

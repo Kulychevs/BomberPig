@@ -10,5 +10,10 @@ namespace BomberPig
         public bool IsValudCoordinates(CellCoordinatesModel coordinates);
         public void SetBomb(CellCoordinatesModel coordinates);
         public bool IsBomb(CellCoordinatesModel coordinates);
+        public void SetPig(CellCoordinatesModel coordinates);
+        public bool IsPig(CellCoordinatesModel coordinates);
+        public bool IsEnemy(CellCoordinatesModel coordinates);
+        public void SetEnemy(CellCoordinatesModel coordinates);
+        public void RemoveEnemy(CellCoordinatesModel coordinates);
     }
 }

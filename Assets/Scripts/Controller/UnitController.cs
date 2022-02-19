@@ -38,10 +38,10 @@ namespace BomberPig
 
         #region Methods
 
-        public void SetInputDirection(UnityEngine.Vector2 direction)
+        protected bool SetNewDirection(Vector2 direction)
         {
             if (_isMoving)
-                return;
+                return false;
 
             var t = _navigator.CalculateDestination(_unitModel.GetCoordinates, direction);
             if (t.direction != MoveDirection.None)
@@ -54,6 +54,8 @@ namespace BomberPig
                 _unitView.SetSprite(_unitModel.GetSprite);
                 _unitView.SetOrderInLayer(_unitModel.GetCoordinates.Row);
             }
+
+            return _isMoving;
         }
 
         protected abstract void BlownUp();
@@ -77,5 +79,6 @@ namespace BomberPig
         }
 
         #endregion
+
     }
 }
