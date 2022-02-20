@@ -27,6 +27,8 @@ namespace BomberPig
         public static Services Instance => _instance.Value;
         public ITimeService TimeService { get; private set; }
         public TimerService TimerService { get; private set; }
+        public MoveDirectionService MoveDirectionService { get; private set; }
+        public IUnitMotor UnitMotor { get; private set; }
 
         #endregion
 
@@ -37,6 +39,8 @@ namespace BomberPig
         {
             TimeService = new UnityTimeService();
             TimerService = new TimerService();
+            MoveDirectionService = new MoveDirectionService();
+            UnitMotor = new UnitMotorService();
         }
 
         #endregion
