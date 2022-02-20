@@ -3,8 +3,8 @@
 
 namespace BomberPig
 {
-    [CreateAssetMenu(fileName = nameof(EnemyData), menuName = "Data/" + nameof(EnemyData), order = 4)]
-    public sealed class EnemyData : PlayerData
+    [CreateAssetMenu(fileName = nameof(EnemyData), menuName = "Data/" + nameof(EnemyData), order = 5)]
+    public sealed class EnemyData : UnitData
     {
         [SerializeField] private Sprite _dirtyLeft;
         [SerializeField] private Sprite _dirtyRight;

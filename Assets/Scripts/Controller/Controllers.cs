@@ -22,13 +22,10 @@
         public Controllers(GameSettings settings)
         {
             var mapController = new MapController(settings.GetMapData, new BombBuilder(settings.getBombPrefab));
-            var playerController = new PlayerController(settings.GetPlayerData, new PlayerBuilder(), 
-                                                        mapController, new Navigator(mapController), new UnitMotor());
+            var playerController = new PlayerController(settings.GetPlayerData, mapController);
             var inputController = new InputController(playerController);
-            var enemiesController = new EnemiesController(settings.GetEnemiesData, new PlayerBuilder(),
-                                                        mapController, new Navigator(mapController), new UnitMotor());
+            var enemiesController = new EnemiesController(settings.GetEnemiesData, mapController);
             var uiController = new UIController();
-
 
             _executeControllers = new IExecute[]
             {
@@ -38,12 +35,21 @@
                 Services.Instance.TimerService
             };
 
-            enemiesController.OnEnemyCatchPig += uiController.ActivateEndGamePanel;
-            playerController.OnBlownUp += uiController.ActivateEndGamePanel;
+            var restartControllers = new IRestart[]
+            {
+                playerController,
+                mapController,
+                enemiesController,
+                Services.Instance.TimerService
+            };
 
-            uiController.OnRestart += enemiesController.Restart;
-            uiController.OnRestart += playerController.Restart;
-            uiController.OnRestart += mapController.Restart;
+            var restartController = new RestartController(restartControllers);
+
+            playerController.OnBlownUp += uiController.ActivateEndGamePanel;
+            playerController.OnBombTimeUpdate += uiController.ShowBombCooldownTime;
+            enemiesController.OnEnemyCatchPig += uiController.ActivateEndGamePanel;
+            enemiesController.OnEnemyBlownUp += uiController.ShowScoretext;
+            uiController.OnRestart += restartController.MakeRestart;
         }
 
         #endregion

@@ -3,7 +3,7 @@
 
 namespace BomberPig
 {
-    public interface IBuildPlayer
+    public interface IBuildUnit
     {
         public UnitView BuildPlayer(GameObject player, Vector2 position);
     }

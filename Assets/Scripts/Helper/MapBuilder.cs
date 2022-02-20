@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 namespace BomberPig
 {
-    public sealed class MapCreator
+    public sealed class MapBuilder
     {
+        private const string OBSTACLES_PARENT_NAME = "Obstacles";
+
+
         public CellModel[,] CreateMap(MapData data)
         {
             var map = new CellModel[data.GetMap.Count, data.GetMap[0].Cells.Count];
@@ -23,6 +26,8 @@ namespace BomberPig
                 }
             }
 
+            BuildObstacles(data.GetMap, map);
+
             return map;
         }
 
@@ -32,6 +37,24 @@ namespace BomberPig
             var step = (end - begin).normalized * stepDistance;
 
             return step;
+        }
+
+        private void BuildObstacles(List<InitRow> initMap, CellModel[,] map)
+        {
+            var parentObstacle = new GameObject(OBSTACLES_PARENT_NAME);
+            for (int i = 0; i < initMap.Count; i++)
+            {
+                for (int j = 0; j < initMap[i].Cells.Count; j++)
+                {
+                    if (map[i, j].IsObstacle)
+                    {
+                        var go = GameObject.Instantiate(initMap[i].Cells[j].ObstaclePrefab,
+                            map[i, j].Center, Quaternion.identity, parentObstacle.transform);
+                        var spriteRenderer = go.GetComponent<SpriteRenderer>();
+                        spriteRenderer.sortingOrder = i;
+                    }
+                }
+            }
         }
     }
 }

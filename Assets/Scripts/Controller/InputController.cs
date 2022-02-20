@@ -1,4 +1,5 @@
-﻿using UnityEngine.InputSystem;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 namespace BomberPig
@@ -8,25 +9,28 @@ namespace BomberPig
         private const float MIN_OFFSET = 0.2f;
 
         private readonly IPlayer _player;
+        private readonly PlayerInputActions _inputActions;
 
         public InputController(IPlayer player)
         {
             _player = player;
+            _inputActions = new PlayerInputActions();
+            _inputActions.Enable();
+            _inputActions.Player.SetBomb.performed += InputOnSetBomb;
+        }
+
+        private void InputOnSetBomb(InputAction.CallbackContext obj)
+        {
+            _player.SetBomb();
         }
 
         public void Execute()
         {
-            var gamepad = Gamepad.current;
-            if (gamepad == null)
-                return;
-
-            var move = gamepad.leftStick.ReadValue();
-            if (System.Math.Abs(move.x) > MIN_OFFSET || System.Math.Abs(move.y) > MIN_OFFSET)
+            var move = _inputActions.Player.Move.ReadValue<Vector2>();
+            if (Mathf.Abs(move.x) > MIN_OFFSET || Mathf.Abs(move.y) > MIN_OFFSET)
+            {
                 _player.SetInputDirection(move);
-
-            var touch = gamepad.rightTrigger.isPressed;
-            if (touch)
-                _player.SetBomb();
+            }
         }
     }
 }

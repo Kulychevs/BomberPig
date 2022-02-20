@@ -4,49 +4,63 @@ using System;
 
 namespace BomberPig
 {
-    public sealed class EnemyController : UnitController, IRestart
+    public sealed class EnemyController : AUnitController
     {
+        #region Fields
+
         public event Action OnCatchPig = delegate { };
-        private event Action _onBlownUp = delegate { };
+        public event Action OnBlownUp = delegate { };
 
         private const int MAX_DIRECTIONS = 4;
 
-        private readonly float _waitTime;
-        private float _time;
+        private readonly EnemyModel _enemyModel;
 
-        public GameObject GetGameObject => _unitView.gameObject;
+        #endregion
 
-        public EnemyController(EnemyData data, IBuildPlayer builder, IMapInfo mapInfo, INavigator navigator, IUnitMotor motor) :
-            base(null, builder, mapInfo, navigator, motor)
+
+        #region Properties
+
+        public bool IsBlownUp => _enemyModel.IsBlownUp;
+
+        #endregion
+
+
+        #region ClassLifeCycles
+
+        public EnemyController(EnemyData data, IMapInfo mapInfo, CellCoordinatesModel startCell) :
+            base(new EnemyModel(data, startCell, mapInfo.GetCellCenter(startCell)), 
+                data.GetPrefab, mapInfo, new UnitBuilder())
         {
-            _waitTime = data.GetWaitTime;
-            _unitModel = new EnemyModel(data, _mapInfo.GetCellCenter(data.GetStartCell));
-            _unitView = builder.BuildPlayer(data.GetPrefab, _unitModel.Position);
-            _unitView.SetOrderInLayer(data.GetStartCell.Row);
-            _mapInfo.SetEnemy(_unitModel.GetCoordinates);
-            _onBlownUp += ((EnemyModel)_unitModel).SetDirtySprite;
-            _time = 0;
+            _enemyModel = GetUnitModel as EnemyModel;
+            _mapInfo.SetEnemy(_enemyModel.GetCoordinates);
+        }
+
+        #endregion
+
+
+        #region Methods
+
+        public void Restart()
+        {
+            _mapInfo.RemoveEnemy(_enemyModel.GetCoordinates);
         }
 
         public override void Execute()
         {
             base.Execute();
 
-            if (!_isMoving)
+            if (!_enemyModel.IsMoving && !_enemyModel.IsWaiting)
             {
-                _time += Services.Instance.TimeService.DeltaTime();
-                if (_time > _waitTime)
-                {
-                    SetNewDestination();
-                    _time = 0;
-                }
+                Services.Instance.TimerService.Add(_enemyModel.GetWaitTime, SetNewDestination, null);
+                _enemyModel.IsWaiting = true;
             }
         }
 
         protected override void BlownUp()
         {
-            _onBlownUp.Invoke();
-            _unitView.SetSprite(_unitModel.GetSprite);
+            _enemyModel.IsBlownUp = true;
+            RefreshSprite();
+            OnBlownUp.Invoke();
         }
 
         private void SetNewDestination()
@@ -71,19 +85,20 @@ namespace BomberPig
                 default:
                     break;
             }
-            var oldCoordinates = _unitModel.GetCoordinates;
+            var oldCoordinates = _enemyModel.GetCoordinates;
             if (SetNewDirection(direction))
             {
                 _mapInfo.RemoveEnemy(oldCoordinates);
-                _mapInfo.SetEnemy(_unitModel.GetCoordinates);
-                if (_mapInfo.IsPig(_unitModel.GetCoordinates))
+                _mapInfo.SetEnemy(_enemyModel.GetCoordinates);
+                if (_mapInfo.IsPig(_enemyModel.GetCoordinates))
                     OnCatchPig.Invoke();
             }
+
+            _enemyModel.IsWaiting = false;
         }
 
-        public void Restart()
-        {
-            _mapInfo.RemoveEnemy(_unitModel.GetCoordinates);
-        }
+
+
+        #endregion
     }
 }

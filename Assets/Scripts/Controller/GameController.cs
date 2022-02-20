@@ -18,8 +18,6 @@ namespace BomberPig
 
         private void Start()
         {
-            //CameraFitter.FitMainCameraSize();
-
             _controllers = new Controllers(_settings);
         }
 

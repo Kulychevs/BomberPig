@@ -17,6 +17,8 @@ MonoBehaviour:
   _right: {fileID: -5792511334730316588, guid: 82a2b275dbaf8154da0fc7ec11c34f20, type: 3}
   _up: {fileID: -4671057516089923990, guid: 82a2b275dbaf8154da0fc7ec11c34f20, type: 3}
   _down: {fileID: 40422208409524962, guid: 82a2b275dbaf8154da0fc7ec11c34f20, type: 3}
-  _speed: 5
-  _startCellRow: 4
-  _startCellColumn: 0
+  _speed: 4
+  _startCell:
+    Row: 4
+    Column: 8
+  _bombCooldownTime: 2

@@ -4,30 +4,32 @@ using UnityEngine;
 
 namespace BomberPig
 {
-    public sealed class PlayerController : UnitController, IPlayer, IRestart
+    public sealed class PlayerController : AUnitController, IPlayer, IRestart
     {
+        #region Fields
+
         public event Action OnBlownUp = delegate { };
+        public event Action<float> OnBombTimeUpdate = delegate { };
 
-        private PlayerData _data;
-        private bool _isBombSet;
+        private readonly PlayerModel _playerModel;
 
-        public PlayerController(PlayerData data, IBuildPlayer builder, IMapInfo mapInfo, INavigator navigator, IUnitMotor motor) :
-            base(data, builder, mapInfo, navigator, motor)
+        #endregion
+
+
+        #region ClasssLifeCycles
+
+        public PlayerController(PlayerData data, IMapInfo mapInfo) :
+            base(new PlayerModel(data, mapInfo.GetCellCenter(data.GetStartCell)),data.GetPrefab, 
+                mapInfo, new UnitBuilder())
         {
-            _data = data;
-            _isBombSet = false;
-            _mapInfo.SetPig(_unitModel.GetCoordinates);
+            _playerModel = GetUnitModel as PlayerModel;
+            Initialization();
         }
 
-        public void SetBomb()
-        {
-            if (!_isBombSet)
-            {
-                _mapInfo.SetBomb(_unitModel.GetCoordinates);
-                Services.Instance.TimerService.Add(3, ResetBombSet);
-                _isBombSet = true;
-            }
-        }
+        #endregion
+
+
+        #region Methods
 
         protected override void BlownUp()
         {
@@ -36,20 +38,44 @@ namespace BomberPig
 
         private void ResetBombSet()
         {
-            _isBombSet = false;
+            _playerModel.IsBompSet = false;
         }
+
+        private void Initialization()
+        {
+            _mapInfo.SetPig(_playerModel.GetCoordinates);
+            ChangeBombCooldownTime(0);
+        }
+
+        #endregion
 
 
         #region IPlayer
+
+        public void SetBomb()
+        {
+            if (!_playerModel.IsBompSet && !_playerModel.IsMoving)
+            {
+                _mapInfo.SetBomb(_playerModel.GetCoordinates);
+                Services.Instance.TimerService.Add(_playerModel.GetBombCoolDownTime, ResetBombSet, ChangeBombCooldownTime);
+                _playerModel.IsBompSet = true;
+            }
+        }
 
         public void SetInputDirection(Vector2 direction)
         {
             if (SetNewDirection(direction))
             {
-                _mapInfo.SetPig(_unitModel.GetCoordinates);
-                if (_mapInfo.IsEnemy(_unitModel.GetCoordinates))
+                _mapInfo.SetPig(_playerModel.GetCoordinates);
+                if (_mapInfo.IsEnemy(_playerModel.GetCoordinates))
                     BlownUp();
             }
+        }
+
+        private void ChangeBombCooldownTime(float time)
+        {
+            var normalizedTime = (_playerModel.GetBombCoolDownTime - time) / _playerModel.GetBombCoolDownTime;
+            OnBombTimeUpdate(normalizedTime);
         }
 
         #endregion
@@ -59,9 +85,8 @@ namespace BomberPig
 
         public void Restart()
         {
-            _isMoving = false;
-            _unitModel = new UnitModel(_data, _mapInfo.GetCellCenter(_data.GetStartCell));
-            _unitView.SetPosition(_mapInfo.GetCellCenter(_unitModel.GetCoordinates));
+            Restart(_playerModel.GetStartCell);
+            Initialization();
         }
 
         #endregion

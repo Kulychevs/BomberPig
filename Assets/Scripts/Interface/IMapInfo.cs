@@ -15,5 +15,8 @@ namespace BomberPig
         public bool IsEnemy(CellCoordinatesModel coordinates);
         public void SetEnemy(CellCoordinatesModel coordinates);
         public void RemoveEnemy(CellCoordinatesModel coordinates);
+        public (MoveDirection direction, Vector2 destination)
+            CalculateDestination(CellCoordinatesModel cellCoordinates, Vector2 direction);
+        public CellCoordinatesModel GetRandomFreeCell();
     }
 }

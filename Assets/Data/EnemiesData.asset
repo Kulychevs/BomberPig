@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: EnemiesData
   m_EditorClassIdentifier: 
   Enemies:
-  - {fileID: 11400000, guid: 96544bb8fb432954b9a671772689028e, type: 2}
-  - {fileID: 11400000, guid: f87b57e45445b9349a2c3bcaab0df873, type: 2}
+  - {fileID: 11400000, guid: 80a5b6480f12b1d42894afdb1c0fb131, type: 2}
+  - {fileID: 11400000, guid: 8d02e343838defc45909046f908c094e, type: 2}
+  SpawnAtOneTime: 3

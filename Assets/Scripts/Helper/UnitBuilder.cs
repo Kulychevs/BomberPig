@@ -3,7 +3,7 @@
 
 namespace BomberPig
 {
-    public sealed class PlayerBuilder : IBuildPlayer
+    public sealed class UnitBuilder : IBuildUnit
     {
         public UnitView BuildPlayer(GameObject player, Vector2 position)
         {

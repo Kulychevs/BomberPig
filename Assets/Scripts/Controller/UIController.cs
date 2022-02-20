@@ -13,12 +13,23 @@ namespace BomberPig
         {
             _uiView = GameObject.FindObjectOfType<UIView>();
             _uiView.OnPressRestartButton += Restart;
+            ShowScoretext(0);
         }
 
         public void ActivateEndGamePanel()
         {
             _uiView.EndGamePanelActivation(true);
             Services.Instance.TimeService.SetTimeScale(0);
+        }
+
+        public void ShowBombCooldownTime(float time)
+        {
+            _uiView.ShowBombCooldownTime(time);
+        }
+
+        public void ShowScoretext(int score)
+        {
+            _uiView.ShowScoreText(score);
         }
 
         private void Restart()

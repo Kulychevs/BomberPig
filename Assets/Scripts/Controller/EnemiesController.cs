@@ -7,34 +7,50 @@ namespace BomberPig
 {
     public sealed class EnemiesController : IExecute, IRestart
     {
+        #region Fields
+
         public event Action OnEnemyCatchPig = delegate { };
+        public event Action<int> OnEnemyBlownUp = delegate { };
 
-        private readonly EnemiesData _data;
-        private readonly IBuildPlayer _builder;
+        private readonly EnemiesModel _enemiesModel;
         private readonly IMapInfo _mapInfo;
-        private readonly INavigator _navigator;
-        private readonly IUnitMotor _motor;
-        private readonly List<EnemyController> _enemyControllers;
 
-        public EnemiesController(EnemiesData data, IBuildPlayer builder, IMapInfo mapInfo, INavigator navigator, IUnitMotor motor)
+
+        #endregion
+
+
+        #region ClassLifeCycles
+
+        public EnemiesController(EnemiesData data, IMapInfo mapInfo)
         {
-            _data = data;
-            _builder = builder;
+            _enemiesModel = new EnemiesModel(data);
             _mapInfo = mapInfo;
-            _navigator = navigator;
-            _motor = motor;
-            _enemyControllers = new List<EnemyController>();
             Initialization();
         }
 
+        #endregion
+
+
+        #region Methods
+
         private void Initialization()
         {
-            foreach (var enemyData in _data.Enemies)
-            {
-                var enemy = new EnemyController(enemyData, _builder, _mapInfo, _navigator, _motor);
-                enemy.OnCatchPig += Catch;
-                _enemyControllers.Add(enemy);
-            }
+            SpawnEnemies();
+            OnEnemyBlownUp.Invoke(_enemiesModel.EnemiesBlownUp);
+        }
+
+        private void CreateEnemy(EnemyData enemyData)
+        {
+            var enemy = new EnemyController(enemyData, _mapInfo, _mapInfo.GetRandomFreeCell());
+            enemy.OnCatchPig += Catch;
+            enemy.OnBlownUp += ListenerOnBlownUp;
+            _enemiesModel.AddEnemy(enemy);
+        }
+
+        private void ListenerOnBlownUp()
+        {
+            IncreaseBlownUpEnemiesAmount();
+            CheckBlownUpEnemies();
         }
 
         private void Catch()
@@ -42,24 +58,67 @@ namespace BomberPig
             OnEnemyCatchPig.Invoke();
         }
 
-        public void Execute()
+        private void IncreaseBlownUpEnemiesAmount()
         {
-            foreach (var enemy in _enemyControllers)
+            OnEnemyBlownUp.Invoke(++_enemiesModel.EnemiesBlownUp);
+        }
+
+        private void CheckBlownUpEnemies()
+        {
+            var isBlownUp = true;
+            foreach (var enemy in _enemiesModel)
             {
-                enemy.Execute();
+                if (!enemy.IsBlownUp)
+                {
+                    isBlownUp = false;
+                    break;
+                }
+            }
+
+            if (isBlownUp)
+                SpawnEnemies();
+        }
+
+        private void SpawnEnemies()
+        {
+            for (int i = 0; i < _enemiesModel.GetEnemyData.SpawnAtOneTime; i++)
+            {
+                var enemyIndex = UnityEngine.Random.Range(0, _enemiesModel.GetEnemyData.Enemies.Length);
+                CreateEnemy(_enemiesModel.GetEnemyData.Enemies[enemyIndex]);
             }
         }
 
+        #endregion
+
+
+        #region IExecute
+
+        public void Execute()
+        {
+            for (int i = 0; i < _enemiesModel.Count; i++)
+            {
+                _enemiesModel[i].Execute();
+            }
+        }
+
+        #endregion
+
+
+        #region IRestart
+
         public void Restart()
         {
-            foreach (var enemy in _enemyControllers)
+            foreach (var enemy in _enemiesModel)
             {
                 enemy.OnCatchPig -= Catch;
+                enemy.OnBlownUp -= ListenerOnBlownUp;
                 enemy.Restart();
                 GameObject.Destroy(enemy.GetGameObject);
             }
-            _enemyControllers.Clear();
+            _enemiesModel.Reset();
             Initialization();
         }
+
+        #endregion
     }
 }

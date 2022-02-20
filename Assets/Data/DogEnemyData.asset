@@ -10,17 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9403bbc5d5073924e830db175cffbfc4, type: 3}
-  m_Name: DogData
+  m_Name: DogEnemyData
   m_EditorClassIdentifier: 
   _prefab: {fileID: 5901975724616570750, guid: cd9b4f7963001604c8f04852ee6704f0, type: 3}
   _left: {fileID: 9118213209582376027, guid: c449d28629a9f5a4a901df389afaf7c4, type: 3}
   _right: {fileID: 1480917699468073914, guid: c449d28629a9f5a4a901df389afaf7c4, type: 3}
   _up: {fileID: 8622651429821660651, guid: c449d28629a9f5a4a901df389afaf7c4, type: 3}
   _down: {fileID: 4232618656017457076, guid: c449d28629a9f5a4a901df389afaf7c4, type: 3}
-  _speed: 2
-  _startCell:
-    Row: 2
-    Column: 12
+  _speed: 3
   _dirtyLeft: {fileID: -6343356305408293647, guid: 532c288672c443b4cb2e72c8ba0b145c, type: 3}
   _dirtyRight: {fileID: 4675298679670731492, guid: 532c288672c443b4cb2e72c8ba0b145c, type: 3}
   _dirtyUp: {fileID: 9005244091501012824, guid: 532c288672c443b4cb2e72c8ba0b145c, type: 3}
