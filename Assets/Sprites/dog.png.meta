@@ -36,6 +36,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -165,7 +166,7 @@ TextureImporter:
         width: 700
         height: 1024
       alignment: 9
-      pivot: {x: 0.5265198, y: 0.4}
+      pivot: {x: 0.5265198, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -186,7 +187,7 @@ TextureImporter:
         width: 700
         height: 1024
       alignment: 9
-      pivot: {x: 0.4878052, y: 0.4}
+      pivot: {x: 0.4878052, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -208,6 +209,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      dog_0: 1480917699468073914
+      dog_1: 9118213209582376027
+      dog_3: 4232618656017457076
+      dog_4: 8622651429821660651
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
