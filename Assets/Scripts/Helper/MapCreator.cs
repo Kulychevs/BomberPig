@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BomberPig
 {
-    public sealed class MapBuilder
+    public sealed class MapCreator
     {
         private const string OBSTACLES_PARENT_NAME = "Obstacles";
 

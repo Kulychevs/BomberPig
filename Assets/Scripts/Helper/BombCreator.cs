@@ -3,16 +3,16 @@
 
 namespace BomberPig
 {
-    public sealed class BombBuilder : IBombBuilder
+    public sealed class BombCreator
     {
         private readonly GameObject _bomb;
 
-        public BombBuilder(GameObject bomb)
+        public BombCreator(GameObject bomb)
         {
             _bomb = bomb;
         }
 
-        public GameObject BuildBomd(Vector2 position, int orderInLayer)
+        public GameObject CreateBomb(Vector2 position, int orderInLayer)
         {
             var go = GameObject.Instantiate(_bomb, position, Quaternion.identity);
             go.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;

@@ -7,7 +7,7 @@ namespace BomberPig
     {
         #region Fields
 
-        private readonly IBombBuilder _bombBuilder;
+        private readonly BombCreator _bombBuilder;
         private readonly MapModel _mapModel;
 
         #endregion
@@ -15,10 +15,10 @@ namespace BomberPig
 
         #region ClassLifeCycles
 
-        public MapController(MapData data, IBombBuilder bombBuilder)
+        public MapController(MapData data, BombCreator bombBuilder)
         {
             _bombBuilder = bombBuilder;
-            var mapCreator = new MapBuilder();
+            var mapCreator = new MapCreator();
             _mapModel = new MapModel(mapCreator.CreateMap(data), data.GetMap.Count, data.GetMap[0].Cells.Count);
         }
 
@@ -82,7 +82,7 @@ namespace BomberPig
             if (_mapModel[coordinates.Row, coordinates.Column].Bomb == null)
             {
                 _mapModel.GetMap[coordinates.Row, coordinates.Column].Bomb =
-                    _bombBuilder.BuildBomd(_mapModel[coordinates.Row, coordinates.Column].Center, coordinates.Row);
+                    _bombBuilder.CreateBomb(_mapModel[coordinates.Row, coordinates.Column].Center, coordinates.Row);
             }
         }
 

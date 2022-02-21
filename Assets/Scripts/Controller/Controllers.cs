@@ -21,7 +21,7 @@
 
         public Controllers(GameSettings settings)
         {
-            var mapController = new MapController(settings.GetMapData, new BombBuilder(settings.getBombPrefab));
+            var mapController = new MapController(settings.GetMapData, new BombCreator(settings.getBombPrefab));
             var playerController = new PlayerController(settings.GetPlayerData, mapController);
             var inputController = new InputController(playerController);
             var enemiesController = new EnemiesController(settings.GetEnemiesData, mapController);

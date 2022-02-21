@@ -24,11 +24,11 @@ namespace BomberPig
 
         #region ClassLifeCycles
 
-        public AUnitController(UnitModel unitModel, GameObject unitPrefab, IMapInfo mapInfo, IBuildUnit builder)
+        public AUnitController(UnitModel unitModel, GameObject unitPrefab, IMapInfo mapInfo)
         {
             _mapInfo = mapInfo;
             _unitModel = unitModel;
-            _unitView = builder.BuildPlayer(unitPrefab, _unitModel.Position);
+            _unitView = new UnitCreator().BuildPlayer(unitPrefab, _unitModel.Position);
             _unitView.SetOrderInLayer(_unitModel.GetCoordinates.Row);
         }
 

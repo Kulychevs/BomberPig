@@ -19,8 +19,8 @@ namespace BomberPig
         #region ClasssLifeCycles
 
         public PlayerController(PlayerData data, IMapInfo mapInfo) :
-            base(new PlayerModel(data, mapInfo.GetCellCenter(data.GetStartCell)),data.GetPrefab, 
-                mapInfo, new UnitBuilder())
+            base(new PlayerModel(data, mapInfo.GetCellCenter(data.GetStartCell)),
+                data.GetPrefab, mapInfo)
         {
             _playerModel = GetUnitModel as PlayerModel;
             Initialization();

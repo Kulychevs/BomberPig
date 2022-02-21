@@ -29,7 +29,7 @@ namespace BomberPig
 
         public EnemyController(EnemyData data, IMapInfo mapInfo, CellCoordinatesModel startCell) :
             base(new EnemyModel(data, startCell, mapInfo.GetCellCenter(startCell)), 
-                data.GetPrefab, mapInfo, new UnitBuilder())
+                data.GetPrefab, mapInfo)
         {
             _enemyModel = GetUnitModel as EnemyModel;
             _mapInfo.SetEnemy(_enemyModel.GetCoordinates);
